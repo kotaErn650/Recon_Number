@@ -47,7 +47,6 @@ header p {
   font-family: 'Share Tech Mono', monospace;
 }
 
-/* Linea decorativa bajo el header */
 header::after {
   content: '';
   display: block;
@@ -58,7 +57,7 @@ header::after {
 }
 
 /* =============================================
-   FILA DE CANVASES — 3 columnas iguales
+   FILA DE CANVASES — 3 columnas
    ============================================= */
 .visor-row {
   display: flex;
@@ -71,7 +70,6 @@ header::after {
   margin: 0 auto;
 }
 
-/* Cada celda: titulo + canvas + etiquetas */
 .visor-cell {
   display: flex;
   flex-direction: column;
@@ -94,52 +92,40 @@ header::after {
   border: 1px solid rgba(255,255,255,0.06);
 }
 
-/* Numero de visor */
-.visor-cell .cell-num {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 0.62rem;
-  color: #2a3a4a;
-  letter-spacing: 1px;
-  margin-top: -4px;
-}
-
 /* =============================================
-   CANVAS — mismo tamaño para los tres
+   CANVASES
    ============================================= */
 #canvasRaw,
-#canvas,
-#canvasSeg {
+#canvasProc {
   width: 460px;
   height: 345px;
   display: block;
   border-radius: 8px;
 }
 
-/* Canvas 1 — Imagen Normal */
 #canvasRaw {
   border: 2px solid #2a8a6a;
   box-shadow: 0 0 20px rgba(40,180,120,0.2), 0 4px 20px rgba(0,0,0,0.5);
 }
 
-/* Canvas 2 — Contorno principal */
-#canvas {
+#canvasProc {
   border: 2px solid #00d4ff;
   box-shadow: 0 0 20px rgba(0,212,255,0.2), 0 4px 20px rgba(0,0,0,0.5);
 }
 
-/* Canvas 3 — Segmentacion */
-#canvasSeg {
-  border: 2px solid #ff6b35;
-  box-shadow: 0 0 20px rgba(255,107,53,0.2), 0 4px 20px rgba(0,0,0,0.5);
+#canvasDigit {
+  border: 1px solid rgba(255,107,53,0.3);
+  border-radius: 6px;
+  background: #000;
+  image-rendering: pixelated;
 }
 
-/* Video fuente oculto pero activo */
 #video {
   display: none;
 }
 
 /* =============================================
-   BADGE DE INDICADOR DE ESTADO (esquina canvas)
+   CANVAS WRAPPER & BADGES
    ============================================= */
 .canvas-wrapper {
   position: relative;
@@ -160,78 +146,101 @@ header::after {
   z-index: 2;
 }
 
-.badge-raw    { background: rgba(40,180,120,0.2);  color: #44cc99; border: 1px solid #2a8a6a; }
-.badge-main   { background: rgba(0,212,255,0.12);  color: #00d4ff; border: 1px solid #00d4ff66; }
-.badge-seg    { background: rgba(255,107,53,0.15); color: #ff8c5a; border: 1px solid #ff6b3566; }
+.badge-raw  { background: rgba(40,180,120,0.2);  color: #44cc99; border: 1px solid #2a8a6a; }
+.badge-proc { background: rgba(0,212,255,0.12);  color: #00d4ff; border: 1px solid #00d4ff66; }
 
 /* =============================================
-   ETIQUETAS DE COLORES DETECTADOS
+   RESULTADO — NÚMERO GRANDE
    ============================================= */
-.color-tags {
-  min-height: 34px;
+.result-cell {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 7px;
-  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
 }
 
-.color-tag {
-  display: inline-flex;
+.result-display {
+  width: 460px;
+  height: 345px;
+  background: rgba(0,0,0,0.4);
+  border: 2px solid #ff6b35;
+  border-radius: 8px;
+  box-shadow: 0 0 20px rgba(255,107,53,0.2), 0 4px 20px rgba(0,0,0,0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  gap: 15px;
+}
+
+.big-number {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 9rem;
+  font-weight: 700;
+  color: #ff6b35;
+  text-shadow: 0 0 40px rgba(255,107,53,0.6), 0 0 80px rgba(255,107,53,0.3);
+  line-height: 1;
+  transition: color 0.3s, text-shadow 0.3s;
+  min-height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.big-number.detecting {
+  color: #00d4ff;
+  text-shadow: 0 0 40px rgba(0,212,255,0.6), 0 0 80px rgba(0,212,255,0.3);
+}
+
+.confidence-bar-wrapper {
+  width: 80%;
+  display: flex;
+  flex-direction: column;
   align-items: center;
   gap: 6px;
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 0.72rem;
-  font-weight: 700;
+}
+
+.confidence-bar {
+  width: 100%;
+  height: 8px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.confidence-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #00d4ff, #ff6b35);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+  box-shadow: 0 0 10px rgba(255,107,53,0.4);
+}
+
+.confidence-text {
   font-family: 'Share Tech Mono', monospace;
-  letter-spacing: 0.5px;
+  font-size: 0.72rem;
+  color: #5a6a7e;
+  letter-spacing: 1px;
+}
+
+.digit-preview-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.digit-preview-label {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.62rem;
+  color: #4a5568;
   text-transform: uppercase;
-  border: 1px solid rgba(255,255,255,0.1);
-  background: rgba(255,255,255,0.04);
-  animation: tagIn 0.18s ease;
+  letter-spacing: 1px;
 }
-
-@keyframes tagIn {
-  from { opacity: 0; transform: scale(0.8) translateY(4px); }
-  to   { opacity: 1; transform: scale(1) translateY(0); }
-}
-
-.color-tag .dot {
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  border: 1px solid rgba(255,255,255,0.2);
-  flex-shrink: 0;
-}
-
-/* Estilos por color */
-.tag-Rojo    { border-color: #ff4444; color: #ff7777; }
-.tag-Rojo    .dot { background: #ff4444; box-shadow: 0 0 4px #ff4444; }
-
-.tag-Verde   { border-color: #44cc44; color: #77dd77; }
-.tag-Verde   .dot { background: #44cc44; box-shadow: 0 0 4px #44cc44; }
-
-.tag-Amarillo { border-color: #ffd60a; color: #ffe45e; }
-.tag-Amarillo .dot { background: #ffd60a; box-shadow: 0 0 4px #ffd60a; }
-
-.tag-Azul    { border-color: #4488ff; color: #77aaff; }
-.tag-Azul    .dot { background: #4488ff; box-shadow: 0 0 4px #4488ff; }
-
-.tag-Naranja { border-color: #ffaa00; color: #ffcc55; }
-.tag-Naranja .dot { background: #ffaa00; box-shadow: 0 0 4px #ffaa00; }
-
-.tag-Blanco  { border-color: #cccccc; color: #eeeeee; }
-.tag-Blanco  .dot { background: #dddddd; box-shadow: 0 0 4px #cccccc; }
-
-.tag-Negro   { border-color: #666666; color: #999999; }
-.tag-Negro   .dot { background: #555555; }
-
-.tag-Gris    { border-color: #999999; color: #bbbbbb; }
-.tag-Gris    .dot { background: #888888; }
 
 /* =============================================
-   PANEL DE CONTROL (botones)
+   PANEL DE CONTROL
    ============================================= */
 #ctrl-panel {
   display: flex;
@@ -272,7 +281,6 @@ header::after {
   cursor: not-allowed;
 }
 
-/* Boton Activar Camara */
 #btn-activar {
   background: rgba(0,212,255,0.08);
   color: #00d4ff;
@@ -285,21 +293,8 @@ header::after {
   box-shadow: 0 0 22px rgba(0,212,255,0.28);
 }
 
-/* Boton Capturar Imagen */
-#btn-capturar {
-  background: rgba(100,220,100,0.07);
-  color: #44cc88;
-  border-color: rgba(68,204,136,0.45);
-  box-shadow: 0 0 14px rgba(68,204,136,0.1);
-}
-
-#btn-capturar:hover {
-  background: rgba(100,220,100,0.15);
-  box-shadow: 0 0 22px rgba(68,204,136,0.26);
-}
-
 /* =============================================
-   PANTALLA PLACEHOLDER (sin camara activa)
+   PLACEHOLDER
    ============================================= */
 #cam-placeholder {
   display: flex;
@@ -307,7 +302,7 @@ header::after {
   align-items: center;
   justify-content: center;
   gap: 10px;
-  max-width: 340px;
+  max-width: 420px;
   margin: 0 auto 16px;
   padding: 12px 18px;
   border: 1px dashed rgba(0,212,255,0.2);
@@ -337,7 +332,6 @@ header::after {
   color: #00d4ff99;
 }
 
-
 .divider {
   width: 100%;
   max-width: 1400px;
@@ -347,7 +341,95 @@ header::after {
 }
 
 /* =============================================
-   PANEL DE INFORMACION TECNICA
+   SECCIÓN DE DIBUJO
+   ============================================= */
+#draw-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.draw-title {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 1.1rem;
+  color: #00d4ff;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.draw-subtitle {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.7rem;
+  color: #4a5568;
+  letter-spacing: 0.5px;
+}
+
+.draw-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+#drawCanvas {
+  border: 2px solid #ff6b35;
+  border-radius: 8px;
+  background: #000;
+  cursor: crosshair;
+  touch-action: none;
+  box-shadow: 0 0 20px rgba(255,107,53,0.2), 0 4px 20px rgba(0,0,0,0.5);
+}
+
+.draw-controls {
+  display: flex;
+  gap: 14px;
+}
+
+.btn-draw {
+  padding: 10px 28px;
+  border-radius: 8px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  border: 1px solid;
+  transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
+}
+
+.btn-draw:active {
+  transform: scale(0.97);
+}
+
+.btn-draw {
+  background: rgba(0,212,255,0.08);
+  color: #00d4ff;
+  border-color: rgba(0,212,255,0.45);
+  box-shadow: 0 0 14px rgba(0,212,255,0.12);
+}
+
+.btn-draw:hover {
+  background: rgba(0,212,255,0.16);
+  box-shadow: 0 0 22px rgba(0,212,255,0.28);
+}
+
+.btn-clear {
+  background: rgba(255,60,60,0.08);
+  color: #ff5555;
+  border-color: rgba(255,60,60,0.45);
+  box-shadow: 0 0 14px rgba(255,60,60,0.12);
+}
+
+.btn-clear:hover {
+  background: rgba(255,60,60,0.16);
+  box-shadow: 0 0 22px rgba(255,60,60,0.28);
+}
+
+/* =============================================
+   PANEL DE INFORMACIÓN
    ============================================= */
 #info {
   margin-top: 18px;
@@ -367,55 +449,46 @@ header::after {
 }
 
 /* =============================================
-   LEYENDA DE COLORES (barra horizontal)
-   ============================================= */
-.legend-row {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 14px;
-  margin-top: 20px;
-  max-width: 900px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.legend-item {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 0.68rem;
-  color: #5a6a7e;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-}
-
-.legend-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-/* =============================================
    RESPONSIVE
    ============================================= */
 @media (max-width: 1480px) {
   .visor-cell { width: 420px; }
-  #canvasRaw, #canvas, #canvasSeg { width: 420px; height: 315px; }
+  #canvasRaw, #canvasProc { width: 420px; height: 315px; }
   .canvas-wrapper { width: 420px; }
+  .result-display { width: 420px; height: 315px; }
 }
 
 @media (max-width: 1300px) {
   .visor-row { gap: 14px; }
   .visor-cell { width: 380px; }
-  #canvasRaw, #canvas, #canvasSeg { width: 380px; height: 285px; }
+  #canvasRaw, #canvasProc { width: 380px; height: 285px; }
   .canvas-wrapper { width: 380px; }
+  .result-display { width: 380px; height: 285px; }
+  .big-number { font-size: 7rem; min-height: 110px; }
 }
 
 @media (max-width: 600px) {
   .visor-cell { width: 100%; }
   .canvas-wrapper { width: 100%; }
-  #canvasRaw, #canvas, #canvasSeg { width: 100%; height: auto; aspect-ratio: 4/3; }
+  #canvasRaw, #canvasProc { width: 100%; height: auto; aspect-ratio: 4/3; }
+  .result-display { width: 100%; height: auto; min-height: 280px; }
+  .big-number { font-size: 6rem; min-height: 90px; }
+  #drawCanvas { width: 260px; height: 260px; }
+}
+
+/* =============================================
+   ESTADO DEL ENGINE — BADGE
+   ============================================= */
+.engine-status {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.65rem;
+  color: #4a5568;
+  letter-spacing: 1px;
+  margin-top: 8px;
+  padding: 3px 12px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  display: inline-block;
+  transition: color 0.3s;
 }
